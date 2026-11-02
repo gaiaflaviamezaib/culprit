@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Culprit</title>
+  <link rel="icon" href="/static/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <link rel="stylesheet" href="/static/style.css?v=8">
+</head>
+<body>
+  <div class="blob b1"></div><div class="blob b2"></div>
+
+  <header class="top">
+    <a class="brand" href="/" title="Culprit home">
+      <img class="logo" src="/static/logo.svg" alt="">
+      <div>
+        <h1>Culprit</h1>
+        <p class="tagline">Find the ingredient your skin hates.</p>
+      </div>
+    </a>
+    <span id="mode" class="mode"><span class="dot"></span><span id="mode-text"></span></span>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button data-tab="today" class="active"><i data-lucide="sun"></i>Today</button>
+    <button data-tab="timeline"><i data-lucide="activity"></i>Timeline</button>
+    <button data-tab="products"><i data-lucide="flask-conical"></i>Products</button>
+    <button data-tab="culprits"><i data-lucide="search"></i>Culprits</button>
+    <button data-tab="shop"><i data-lucide="shopping-bag"></i>Shop check</button>
+    <button data-tab="map"><i data-lucide="map-pinned"></i>Store map</button>
+  </nav>
+
+  <main>
+    <!-- TODAY -->
+    <section id="today" class="panel active">
+      <div class="banner" style="--img:url('https://images.unsplash.com/photo-1655026392641-bf283a5f12d4?w=1400&q=70&auto=format&fit=crop')">
+        <div class="banner-text">
+          <span class="eyebrow"><i data-lucide="sparkles"></i>Daily check-in</span>
+          <h2 id="greeting">Hi! Ready for today's skin check?</h2>
+          <p>Same spot, same light, no makeup. YouCam AI Skin Analysis measures redness, breakouts and texture in seconds.</p>
+        </div>
+      </div>
+
+      <div class="card checkin">
+        <form id="checkin-form">
+          <label class="face-drop" id="face-drop">
+            <input type="file" id="photo" accept="image/jpeg,image/png" capture="user">
+            <div class="face-frame">
+              <img id="preview" alt="" hidden>
+              <video id="webcam" playsinline muted hidden></video>
+              <div class="countdown" id="countdown" hidden></div>
+              <div class="face-guide"><i data-lucide="scan-face"></i></div>
+              <div class="scanline"></div>
+              <div class="scan-dots"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            </div>
+            <span id="photo-label">Tap to choose a selfie</span>
+          </label>
+          <div class="checkin-side">
+            <ul class="tips">
+              <li><i data-lucide="sun"></i>Face a window or a lamp</li>
+              <li><i data-lucide="scan-face"></i>Fill the oval with your face</li>
+              <li><i data-lucide="droplet"></i>Bare skin, no makeup</li>
+            </ul>
+            <div class="row">
+              <button type="button" class="ghost" id="webcam-btn"><i data-lucide="camera"></i><span>Use webcam</span></button>
+              <button type="button" class="ghost" id="webcam-cancel" hidden>Cancel</button>
+            </div>
+            <label class="inline"><i data-lucide="calendar-days"></i>Date <input type="date" id="checkin-date"></label>
+            <button type="submit" class="primary big" id="analyze-btn"><i data-lucide="sparkles"></i><span>Analyze my skin</span></button>
+            <p class="hint" id="scan-step"></p>
+            <div id="photo-check"></div>
+          </div>
+        </form>
+        <div id="checkin-result"></div>
+      </div>
+
+      <div id="summary"></div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section id="timeline" class="panel">
+      <div class="card">
+        <div class="card-head"><span class="icon-bubble"><i data-lucide="activity"></i></span>
+          <div><h2>Irritation over time</h2>
+          <p class="muted">Higher means more irritated. Tap a product below to see its test window on the chart.</p></div></div>
+        <div class="chart-wrap"><canvas id="chart"></canvas></div>
+        <div id="legend" class="legend"></div>
+        <div id="legend-detail"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="icon-bubble"><i data-lucide="images"></i></span>
+          <div><h2>Photo diary</h2>
+          <p class="muted">Every check-in, day by day. Drag the slider, press play, or tap a point on the chart. The small photo shows your skin before the product you were testing.</p></div></div>
+        <div id="diary"></div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section id="products" class="panel">
+      <div class="banner short" style="--img:url('https://images.unsplash.com/photo-1653784097013-786a8965ea3b?w=1400&q=70&auto=format&fit=crop')">
+        <div class="banner-text">
+          <span class="eyebrow"><i data-lucide="flask-conical"></i>Your routine</span>
+          <h2>Every product is a lead</h2>
+          <p>Add what you use with the date you started it. Scan a barcode to pull the ingredients automatically.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="icon-bubble"><i data-lucide="plus"></i></span><h3>Add a product</h3></div>
+        <form id="product-form">
+          <div class="row">
+            <input id="p-barcode" placeholder="Barcode (optional)">
+            <button type="button" id="scan-product" class="ghost"><i data-lucide="scan-barcode"></i>Scan</button>
+            <button type="button" id="lookup-product" class="ghost"><i data-lucide="search"></i>Look up</button>
+          </div>
+          <video id="scan-video-p" class="scanner" hidden playsinline></video>
+          <div id="lookup-preview"></div>
+          <input type="hidden" id="p-image">
+          <div class="row">
+            <input id="p-name" placeholder="Product name" required>
+            <input id="p-brand" placeholder="Brand">
+          </div>
+          <div class="cat-picker" id="cat-picker"></div>
+          <input type="hidden" id="p-category">
+          <div class="row">
+            <label class="inline"><i data-lucide="calendar-days"></i>Started <input type="date" id="p-start"></label>
+          </div>
+          <textarea id="p-ingredients" rows="3" placeholder="Ingredients: Water, Glycerin, ..."></textarea>
+          <p class="hint"><i data-lucide="info"></i>Start one new product at a time, about a week apart. That is what makes the detective work.</p>
+          <button type="submit" class="primary"><i data-lucide="plus"></i>Add to my routine</button>
+        </form>
+      </div>
+      <div id="product-list"></div>
+    </section>
+
+    <!-- CULPRITS -->
+    <section id="culprits" class="panel">
+      <div class="banner short dark" style="--img:url('https://images.unsplash.com/photo-1676312754401-d97fe43c2c4b?w=1400&q=70&auto=format&fit=crop')">
+        <div class="banner-text">
+          <span class="eyebrow"><i data-lucide="fingerprint"></i>Case file</span>
+          <h2>The investigation</h2>
+          <p id="verdict-line">Gathering evidence...</p>
+        </div>
+      </div>
+      <div id="wanted"></div>
+      <div id="verdict"></div>
+      <div class="card">
+        <div class="card-head"><span class="icon-bubble"><i data-lucide="flower-2"></i></span><h3>Suspect families</h3></div>
+        <div id="families"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="icon-bubble"><i data-lucide="microscope"></i></span>
+          <div><h3>Suspect ingredients</h3>
+          <p class="muted small">Found in products that caused a reaction and in none you tolerate. Ingredients you used safely elsewhere are cleared.</p></div></div>
+        <div id="suspects"></div>
+      </div>
+      <p class="disclaimer"><i data-lucide="info"></i>Culprit spots patterns in your own data. It is not a medical diagnosis. For a severe or lasting reaction, see a dermatologist; a patch test confirms allergies. Bring this page with you.</p>
+      <button id="print" class="ghost"><i data-lucide="printer"></i>Print report for my dermatologist</button>
+    </section>
+
+    <!-- SHOP -->
+    <section id="shop" class="panel">
+      <div class="banner short" style="--img:url('https://images.unsplash.com/photo-1556227703-b7668d8cff99?w=1400&q=70&auto=format&fit=crop')">
+        <div class="banner-text">
+          <span class="eyebrow"><i data-lucide="store"></i>In the store</span>
+          <h2>Before you buy</h2>
+          <p>Scan a product. Culprit checks its label against your suspects.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row">
+          <input id="s-barcode" placeholder="Barcode">
+          <button id="scan-shop" class="ghost"><i data-lucide="scan-barcode"></i>Scan</button>
+          <button id="check-barcode" class="primary"><i data-lucide="shield-check"></i>Check</button>
+        </div>
+        <video id="scan-video-s" class="scanner" hidden playsinline></video>
+        <p class="hint">Try a demo product:</p>
+        <div class="demo-codes">
+          <button class="code-chip" data-code="DEMO-LAVENDER"><i data-lucide="flower-2"></i>Lavender lotion</button>
+          <button class="code-chip" data-code="DEMO-FRAGFREE"><i data-lucide="leaf"></i>Fragrance-free cream</button>
+          <button class="code-chip" data-code="DEMO-FACEOIL"><i data-lucide="droplet"></i>Botanical face oil</button>
+        </div>
+        <details>
+          <summary>No barcode? Paste the label instead</summary>
+          <textarea id="s-ingredients" rows="4" placeholder="Ingredients: ..."></textarea>
+          <button id="check-text" class="primary">Check label</button>
+        </details>
+      </div>
+      <div id="shop-result"></div>
+    </section>
+
+    <!-- STORE MAP -->
+    <section id="map" class="panel">
+      <div class="card">
+        <div class="card-head"><span class="icon-bubble"><i data-lucide="map-pinned"></i></span>
+          <div><h2>Your store map</h2>
+          <p class="muted">Every store where you checked a product. Red: you found something to skip. Green: a safe pick.</p></div></div>
+        <div class="map-stats" id="map-stats"></div>
+        <div class="map-box"><div id="leaflet"></div></div>
+        <div class="pin-form" id="pin-form" hidden>
+          <p class="hint" id="pin-for"></p>
+          <div class="row">
+            <input id="pin-store" placeholder="Store name, e.g. Pharmacy on Broadway">
+            <button type="button" class="ghost" id="pin-locate"><i data-lucide="locate-fixed"></i>Use my location</button>
+          </div>
+          <p class="hint"><i data-lucide="map-pin"></i>Or tap the map to place the pin.</p>
+          <div class="row">
+            <button type="button" class="primary" id="pin-save"><i data-lucide="map-pin"></i>Save pin</button>
+            <button type="button" class="ghost" id="pin-cancel">Cancel</button>
+          </div>
+        </div>
+        <button type="button" class="ghost" id="pin-new"><i data-lucide="map-pin"></i>Pin a store</button>
+      </div>
+      <div id="visit-list"></div>
+    </section>
+  </main>
+
+  <footer>
+    <button id="load-demo" class="ghost small"><i data-lucide="play"></i>Load 6-week demo</button>
+    <button id="reset" class="ghost small"><i data-lucide="rotate-ccw"></i>Clear all data</button>
+    <span class="muted small">Skin analysis by YouCam API · ingredients from Open Beauty Facts · maps © OpenStreetMap · photos from Unsplash</span>
+  </footer>
+
+  <div id="popover" hidden></div>
+  <div id="toast" hidden></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="/static/app.js?v=11"></script>
+</body>
+</html>
