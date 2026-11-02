@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Recorder</title>
+  <link rel="icon" href="/static/logo.svg" type="image/svg+xml">
+  <style>
+    :root { --bg: #fff7f9; --card: #fff; --ink: #2b2024; --muted: #7a6870; --accent: #e0457b; --line: #f1dde4; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) { --bg: #1d1619; --card: #2a2024; --ink: #f6eef1; --muted: #b9a7ae; --line: #3d3036; }
+    }
+    :root[data-theme="dark"] { --bg: #1d1619; --card: #2a2024; --ink: #f6eef1; --muted: #b9a7ae; --line: #3d3036; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, sans-serif; padding: 24px 16px; }
+    main { max-width: 640px; margin: 0 auto; }
+    h1 { font-size: 26px; margin: 0 0 4px; }
+    .muted { color: var(--muted); }
+    .step { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; margin: 14px 0; }
+    .step h2 { font-size: 17px; margin: 0 0 6px; }
+    button { font: inherit; font-weight: 600; border: 0; border-radius: 999px; padding: 10px 20px; cursor: pointer; background: var(--accent); color: #fff; }
+    button.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    button:disabled { opacity: .45; cursor: default; }
+    video#cam { width: 200px; aspect-ratio: 1; object-fit: cover; border-radius: 50%; display: block; margin: 10px 0; background: #000; transform: scaleX(-1); }
+    .status { font-weight: 600; }
+    .rec { color: var(--accent); }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    a.dl { color: var(--accent); font-weight: 600; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Demo recorder</h1>
+  <p class="muted">Records your screen, a floating face bubble and your microphone. Nothing is uploaded: the video is saved to your Downloads folder.</p>
+
+  <div class="step">
+    <h2>1. Face bubble</h2>
+    <p class="muted">Turns on your camera and microphone and opens your face in a small floating window that stays on top of everything. Drag it to a corner and resize it.</p>
+    <video id="cam" playsinline muted hidden></video>
+    <div class="row">
+      <button id="cam-on">Turn on face bubble</button>
+      <button id="pip" class="ghost" hidden>Float it again</button>
+    </div>
+    <p class="status" id="cam-status"></p>
+  </div>
+
+  <div class="step">
+    <h2>2. Record</h2>
+    <p class="muted">Choose <b>Entire screen</b> in the window that opens, so the recording follows you between tabs and shows the face bubble. Then switch to the Culprit tab and present.</p>
+    <div class="row">
+      <button id="start" disabled>Start recording</button>
+      <button id="stop" class="ghost" disabled>Stop and save</button>
+      <span class="status" id="timer"></span>
+    </div>
+  </div>
+
+  <div class="step">
+    <h2>3. Your video</h2>
+    <p class="muted" id="result">After you stop, the file downloads automatically. Upload it to YouTube as Public.</p>
+  </div>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let camStream = null, screenStream = null, recorder = null, chunks = [], started = 0, tick = null;
+
+function pickType() {
+  const types = ["video/mp4;codecs=avc1.640028,mp4a.40.2", "video/mp4", "video/webm;codecs=vp9,opus", "video/webm"];
+  return types.find((t) => window.MediaRecorder && MediaRecorder.isTypeSupported(t)) || "";
+}
+
+async function floatCam() {
+  try {
+    await $("cam").requestPictureInPicture();
+    $("cam-status").textContent = "Face bubble is floating. Drag it to a corner.";
+  } catch (e) {
+    $("cam-status").textContent = "Could not float the bubble: " + e.message;
+  }
+  $("pip").hidden = false;
+}
+
+$("cam-on").onclick = async () => {
+  try {
+    camStream = await navigator.mediaDevices.getUserMedia({
+      video: { width: 1280, height: 720 },
+      audio: { echoCancellation: true, noiseSuppression: true },
+    });
+  } catch (e) {
+    $("cam-status").textContent = "Camera or microphone blocked: " + e.message + ". Close other apps using the camera (OBS, Loom, Camera) and try again.";
+    return;
+  }
+  const v = $("cam");
+  v.srcObject = camStream; v.hidden = false; await v.play();
+  $("cam-on").disabled = true;
+  $("start").disabled = false;
+  floatCam();
+};
+$("pip").onclick = floatCam;
+
+$("start").onclick = async () => {
+  try {
+    screenStream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 30 }, audio: false });
+  } catch (e) {
+    $("timer").textContent = "Screen sharing was cancelled.";
+    return;
+  }
+  const tracks = [...screenStream.getVideoTracks(), ...camStream.getAudioTracks()];
+  const type = pickType();
+  recorder = new MediaRecorder(new MediaStream(tracks), { mimeType: type, videoBitsPerSecond: 8_000_000 });
+  chunks = [];
+  recorder.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+  recorder.onstop = save;
+  recorder.start(1000);
+  // Stopping from the browser's "Stop sharing" bar also saves the video.
+  screenStream.getVideoTracks()[0].onended = () => recorder.state !== "inactive" && recorder.stop();
+  started = Date.now();
+  tick = setInterval(() => {
+    const s = Math.round((Date.now() - started) / 1000);
+    $("timer").innerHTML = `<span class="rec">● Recording</span> ${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+  }, 500);
+  $("start").disabled = true;
+  $("stop").disabled = false;
+};
+
+$("stop").onclick = () => recorder && recorder.state !== "inactive" && recorder.stop();
+
+function save() {
+  clearInterval(tick);
+  screenStream.getTracks().forEach((t) => t.stop());
+  const type = recorder.mimeType || "video/webm";
+  const ext = type.startsWith("video/mp4") ? "mp4" : "webm";
+  const blob = new Blob(chunks, { type });
+  const url = URL.createObjectURL(blob);
+  const stamp = new Date().toISOString().slice(0, 16).replace(/[T:]/g, "-");
+  const name = `culprit-demo-${stamp}.${ext}`;
+  const a = document.createElement("a");
+  a.href = url; a.download = name; a.className = "dl"; a.textContent = `Download again (${name}, ${(blob.size / 1e6).toFixed(1)} MB)`;
+  document.body.appendChild(a); a.click();
+  $("result").innerHTML = `Saved to your Downloads folder as <b>${name}</b>. `;
+  $("result").appendChild(a);
+  $("timer").textContent = "Stopped.";
+  $("stop").disabled = true;
+  $("start").disabled = false;
+}
+</script>
+</body>
+</html>

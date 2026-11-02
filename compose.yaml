@@ -1,0 +1,14 @@
+services:
+  culprit:
+    build: .
+    ports:
+      - "8765:8765"
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - culprit-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  culprit-data:
