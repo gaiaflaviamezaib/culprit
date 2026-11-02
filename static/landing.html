@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Culprit · Find the ingredient your skin reacts to</title>
+  <meta name="description" content="Culprit tracks your skin with daily YouCam AI skin analysis and finds which skincare ingredient is causing your reactions.">
+  <link rel="icon" href="/static/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/landing.css?v=3">
+</head>
+<body>
+  <nav class="nav" id="nav">
+    <a class="nav-brand" href="/"><img src="/static/logo.svg" alt=""><span>Culprit</span></a>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#detective">The detective</a>
+      <a href="#features">Features</a>
+      <a href="#api">YouCam API</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="/app">Open the app <i data-lucide="arrow-right"></i></a>
+  </nav>
+
+  <!-- HERO CAROUSEL -->
+  <header class="hero" id="hero">
+    <div class="slides" id="slides">
+      <figure class="slide active" style="--img:url('https://images.unsplash.com/photo-1655026392641-bf283a5f12d4?w=2000&q=75&auto=format&fit=crop')"><figcaption>Every new serum is an experiment on your skin.</figcaption></figure>
+      <figure class="slide" style="--img:url('https://images.unsplash.com/photo-1603401712778-ab0575182f12?w=2000&q=75&auto=format&fit=crop')"><figcaption>Dermatologists find allergens by testing one at a time.</figcaption></figure>
+      <figure class="slide" style="--img:url('https://images.unsplash.com/photo-1583209814683-c023dd293cc6?w=2000&q=75&auto=format&fit=crop')"><figcaption>Twenty to forty ingredients per label. One of them might be the problem.</figcaption></figure>
+      <figure class="slide" style="--img:url('https://images.unsplash.com/photo-1599847987657-881f11b92a75?w=2000&q=75&auto=format&fit=crop')"><figcaption>Ten seconds a day. Same mirror, same light.</figcaption></figure>
+    </div>
+    <div class="hero-shade"></div>
+    <div class="hero-content">
+      <span class="pill reveal"><i data-lucide="sparkles"></i>Powered by YouCam AI Skin Analysis</span>
+      <h1 class="reveal">Your skin keeps a record.<br><em>Culprit reads it.</em></h1>
+      <p class="lead reveal">A daily selfie, measured by AI. Every product you use, ingredient by ingredient. Culprit compares the two and tells you which ingredient your skin is reacting to.</p>
+      <div class="hero-ctas reveal">
+        <a class="btn btn-primary" href="/app"><i data-lucide="scan-face"></i>Start tracking</a>
+        <a class="btn btn-glass" href="#detective"><i data-lucide="play"></i>Watch it work</a>
+      </div>
+    </div>
+    <div class="hero-controls">
+      <button class="arrow" id="prev" aria-label="Previous photo"><i data-lucide="chevron-left"></i></button>
+      <div class="dots" id="dots"></div>
+      <button class="arrow" id="next" aria-label="Next photo"><i data-lucide="chevron-right"></i></button>
+    </div>
+    <p class="caption" id="caption"></p>
+  </header>
+
+  <div class="strip">
+    <span><i data-lucide="scan-face"></i>YouCam AI Skin Analysis</span>
+    <span><i data-lucide="database"></i>Open Beauty Facts ingredient database</span>
+    <span><i data-lucide="map"></i>OpenStreetMap</span>
+    <span><i data-lucide="lock"></i>Your data stays on your device</span>
+  </div>
+
+  <!-- PROBLEM / FACTS -->
+  <section class="section" id="why">
+    <div class="wrap two-col">
+      <div class="reveal">
+        <span class="eyebrow">The problem</span>
+        <h2>You know a product irritated you. You don't know which ingredient.</h2>
+        <p>Most people stop using the product and move on. The irritant is still in the next bottle they buy, under a slightly different name: <em>parfum</em>, <em>aroma</em>, <em>linalool</em>, <em>lavandula oil</em>.</p>
+        <p>Dermatologists solve this with patch tests and by comparing the products a patient reacted to with the ones they tolerate. Culprit does that second part for you, every day, with measurements instead of memory.</p>
+      </div>
+      <div class="facts">
+        <div class="fact reveal"><b>1–3%</b><span>of people in Europe have a contact allergy to fragrance ingredients</span></div>
+        <div class="fact reveal"><b data-count="16" data-prefix="~" data-suffix="%">~16%</b><span>of eczema patients are sensitised to fragrance ingredients</span></div>
+        <div class="fact reveal"><b data-count="2500" data-suffix="+">2,500+</b><span>fragrance ingredients are listed in the EU cosmetic ingredient database</span></div>
+        <div class="fact reveal"><b>26 → 80</b><span>fragrance allergens EU labels must name on new products from July 2026</span></div>
+        <p class="source">Sources: <a href="https://ec.europa.eu/health/scientific_committees/opinions_layman/perfume-allergies/en/l-3/7-are-regulations-adequate.htm" target="_blank" rel="noopener">EU Scientific Committee on Consumer Safety (2012)</a>, <a href="https://www.hpra.ie/regulation/cosmetics/labelling-and-claims/cosmetic-products-labelling/labelling-of-cosmetic-fragrance-allergens" target="_blank" rel="noopener">HPRA, Regulation (EU) 2023/1545</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section alt" id="how">
+    <div class="wrap">
+      <div class="head reveal">
+        <span class="eyebrow">How it works</span>
+        <h2>Three habits. One answer.</h2>
+      </div>
+      <div class="steps">
+        <article class="step reveal">
+          <div class="step-img" style="--img:url('https://images.unsplash.com/photo-1581182800629-7d90925ad072?w=900&q=70&auto=format&fit=crop')"><span class="num">01</span></div>
+          <h3><i data-lucide="scan-face"></i>Daily selfie</h3>
+          <p>YouCam AI Skin Analysis scores redness, breakouts, texture, pores, oiliness and moisture from one photo.</p>
+        </article>
+        <article class="step reveal">
+          <div class="step-img" style="--img:url('https://images.unsplash.com/photo-1598528738936-c50861cc75a9?w=900&q=70&auto=format&fit=crop')"><span class="num">02</span></div>
+          <h3><i data-lucide="scan-barcode"></i>Log your products</h3>
+          <p>Scan a barcode and the full ingredient list comes from Open Beauty Facts. Note the day you started it.</p>
+        </article>
+        <article class="step reveal">
+          <div class="step-img" style="--img:url('https://images.unsplash.com/photo-1676312754401-d97fe43c2c4b?w=900&q=70&auto=format&fit=crop')"><span class="num">03</span></div>
+          <h3><i data-lucide="fingerprint"></i>Catch the culprit</h3>
+          <p>Culprit compares your skin in the 10 days before and after each product, then cross-examines the ingredients.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERACTIVE DETECTIVE -->
+  <section class="section" id="detective">
+    <div class="wrap">
+      <div class="head reveal">
+        <span class="eyebrow">The detective</span>
+        <h2>Watch the reasoning, step by step</h2>
+        <p class="sub">Two products made this person's skin red. Together they contain 20 different ingredients. Here is how Culprit narrows it down.</p>
+      </div>
+      <div class="case reveal">
+        <div class="case-steps" id="case-steps">
+          <button class="case-step active" data-step="0"><span>1</span>Two reactions</button>
+          <button class="case-step" data-step="1"><span>2</span>What they share</button>
+          <button class="case-step" data-step="2"><span>3</span>Clear the innocent</button>
+          <button class="case-step" data-step="3"><span>4</span>The culprit</button>
+        </div>
+        <div class="case-board" id="case-board">
+          <div class="evidence">
+            <div class="ev-card bad"><img src="https://images.unsplash.com/photo-1573461160327-b450ce3d8e7f?w=200&h=200&fit=crop&q=70&auto=format" alt=""><div><b>Glow Vitamin C Serum</b><span><i data-lucide="flame"></i>Redness +14 after starting</span></div></div>
+            <div class="ev-card bad"><img src="https://images.unsplash.com/photo-1585945037805-5fd82c2e60b1?w=200&h=200&fit=crop&q=70&auto=format" alt=""><div><b>Rose Night Cream</b><span><i data-lucide="flame"></i>Redness +13 after starting</span></div></div>
+          </div>
+          <div class="lineup" id="lineup"></div>
+          <div class="cleared-by" id="cleared-by"></div>
+          <p class="case-note" id="case-note"></p>
+        </div>
+        <div class="case-nav">
+          <button class="btn btn-ghost" id="case-prev"><i data-lucide="arrow-left"></i>Back</button>
+          <button class="btn btn-primary" id="case-next">Next step<i data-lucide="arrow-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE APP PREVIEW -->
+  <section class="section dark" id="preview">
+    <div class="wrap two-col center">
+      <div class="reveal">
+        <span class="eyebrow light">Try it right here</span>
+        <h2>This is the real app, running live.</h2>
+        <p>Scroll and tap inside the phone. Load the 6-week demo to see a full investigation: a vitamin C serum and a rose night cream both caused redness, and Culprit traces it to fragrance and linalool.</p>
+        <ul class="ticks">
+          <li><i data-lucide="check"></i>Animated skin score rings from YouCam</li>
+          <li><i data-lucide="check"></i>Tap any ingredient to learn what it is</li>
+          <li><i data-lucide="check"></i>Interactive irritation timeline</li>
+        </ul>
+        <a class="btn btn-primary" href="/app">Open full screen <i data-lucide="maximize-2"></i></a>
+      </div>
+      <div class="phone reveal">
+        <div class="phone-notch"></div>
+        <iframe src="/app" title="Culprit app preview" loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" id="features">
+    <div class="wrap">
+      <div class="head reveal">
+        <span class="eyebrow">Features</span>
+        <h2>Everything you need to stop guessing</h2>
+      </div>
+      <div class="grid">
+        <article class="feature reveal"><span class="f-icon"><i data-lucide="gauge"></i></span><h3>Daily skin scores</h3><p>Six YouCam measurements per selfie, tracked over weeks so small changes become visible.</p></article>
+        <article class="feature reveal"><span class="f-icon"><i data-lucide="activity"></i></span><h3>Reaction timeline</h3><p>See your irritation index rise and fall, with each product's test window marked on the chart.</p></article>
+        <article class="feature reveal"><span class="f-icon"><i data-lucide="microscope"></i></span><h3>Ingredient cross-examination</h3><p>Synonyms merged (aqua = water, parfum = fragrance) and grouped into known irritant families.</p></article>
+        <article class="feature reveal"><span class="f-icon"><i data-lucide="shield-check"></i></span><h3>Shop check</h3><p>Scan a product in the store and get avoid, caution or looks safe, based on your own suspects.</p></article>
+        <article class="feature reveal"><span class="f-icon"><i data-lucide="map-pinned"></i></span><h3>Your store map</h3><p>Pin every store where you checked a product. See where you found safe picks and what to skip.</p></article>
+        <article class="feature reveal"><span class="f-icon"><i data-lucide="printer"></i></span><h3>Dermatologist report</h3><p>Print the evidence and bring it to your appointment. A patch test can then confirm it.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHOTO BAND -->
+  <section class="band reveal" style="--img:url('https://images.unsplash.com/photo-1552256031-811fa8f0a7b1?w=2000&q=70&auto=format&fit=crop')">
+    <div class="band-text">
+      <h2>Culprit narrows it down. A patch test confirms it.</h2>
+      <p>Culprit is a tracking tool, not a diagnosis. It helps you arrive at the dermatologist with weeks of evidence instead of a guess.</p>
+    </div>
+  </section>
+
+  <!-- YOUCAM API -->
+  <section class="section alt" id="api">
+    <div class="wrap two-col">
+      <div class="reveal">
+        <span class="eyebrow">Under the hood</span>
+        <h2>Built on the YouCam AI Skin Analysis API</h2>
+        <p>Each check-in sends one selfie to Perfect Corp's YouCam API (V2). The API returns a score from 1 to 100 for each skin concern, where higher means healthier skin. Culprit combines redness, breakouts and texture into an irritation index and compares it before and after every product you start.</p>
+        <ol class="flow">
+          <li><code>POST /file</code><span>Register the photo and get a secure upload link</span></li>
+          <li><code>PUT</code><span>Upload the selfie</span></li>
+          <li><code>POST /task/skin-analysis</code><span>Ask for redness, acne, texture, pore, oiliness, moisture</span></li>
+          <li><code>GET /task/skin-analysis/{id}</code><span>Poll until the scores are ready</span></li>
+        </ol>
+      </div>
+      <div class="code reveal">
+        <div class="code-head"><span></span><span></span><span></span><b>YouCam response (simplified)</b></div>
+<pre><code>{
+  "task_status": "success",
+  "results": {
+    "output": [
+      { "type": "redness",  "ui_score": <mark>58</mark> },
+      { "type": "acne",     "ui_score": 71 },
+      { "type": "texture",  "ui_score": 66 },
+      { "type": "pore",     "ui_score": 69 },
+      { "type": "oiliness", "ui_score": 64 },
+      { "type": "moisture", "ui_score": 72 }
+    ]
+  }
+}</code></pre>
+        <p class="code-foot"><i data-lucide="arrow-down"></i>Culprit turns this into: <b>irritation index 36.5</b> (100 minus the weighted redness, acne and texture scores), compared with your days before each new product.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIVACY -->
+  <section class="section">
+    <div class="wrap privacy">
+      <div class="p-item reveal"><i data-lucide="hard-drive"></i><h3>Stored on your device</h3><p>Products, scores and photos live in a local database. No account needed.</p></div>
+      <div class="p-item reveal"><i data-lucide="send"></i><h3>Only the selfie is analyzed</h3><p>Photos go to YouCam for scoring and nowhere else. Ingredient lookups only send the barcode.</p></div>
+      <div class="p-item reveal"><i data-lucide="map-pin-off"></i><h3>Location only when you ask</h3><p>The store map uses your location only when you pin a store, and you can place pins by hand.</p></div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section alt" id="faq">
+    <div class="wrap narrow">
+      <div class="head reveal"><span class="eyebrow">FAQ</span><h2>Questions</h2></div>
+      <details class="reveal"><summary>Is this a medical diagnosis?<i data-lucide="plus"></i></summary><p>No. Culprit finds patterns in your own data. Only a dermatologist and a patch test can confirm an allergy. For a severe or lasting reaction, see a doctor.</p></details>
+      <details class="reveal"><summary>Why start one product at a time?<i data-lucide="plus"></i></summary><p>If two new products start the same week, nobody can tell which one caused a change. Culprit flags these overlaps and gives them less weight. About a week between new products works best.</p></details>
+      <details class="reveal"><summary>How can an ingredient be "cleared"?<i data-lucide="plus"></i></summary><p>If you use a product with that ingredient and your skin stays calm, it is probably not the problem. The exception is acids, retinoids and drying alcohols, which can be fine at low strength and irritating at high strength, so they are never cleared this way.</p></details>
+      <details class="reveal"><summary>What if a product has no barcode?<i data-lucide="plus"></i></summary><p>Paste the ingredient list from the label or the brand's website. Culprit cleans it up and merges synonyms automatically.</p></details>
+      <details class="reveal"><summary>Which YouCam API does it use?<i data-lucide="plus"></i></summary><p>The AI Skin Analysis API (V2), with six standard-definition concerns: redness, acne, texture, pore, oiliness and moisture.</p></details>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta" style="--img:url('https://images.unsplash.com/photo-1619451427882-6aaaded0cc61?w=2000&q=70&auto=format&fit=crop')">
+    <div class="cta-inner reveal">
+      <h2>Your next reaction could be your last guess.</h2>
+      <p>Start with today's selfie. In a few weeks you will know.</p>
+      <a class="btn btn-primary" href="/app"><i data-lucide="scan-face"></i>Open Culprit</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="wrap foot">
+      <a class="nav-brand" href="/"><img src="/static/logo.svg" alt=""><span>Culprit</span></a>
+      <p>Skin analysis by the YouCam API (Perfect Corp). Ingredients from Open Beauty Facts (ODbL). Maps from OpenStreetMap. Photos from Unsplash.</p>
+      <p class="muted">Culprit is not a medical device and does not diagnose allergies.</p>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="/static/landing.js?v=3"></script>
+</body>
+</html>
