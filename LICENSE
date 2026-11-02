@@ -1,0 +1,18 @@
+Copyright (c) 2026 Gaïa Mezaïb Boti. All rights reserved.
+
+This repository is published so the project can be viewed and evaluated. You may
+read the source code and run it on your own computer to evaluate it, including the
+hackathon sponsor, administrator and judges for the duration of judging.
+
+No other rights are granted. Without prior written permission from the author, you
+may not copy, modify, merge, publish, distribute, sublicense, sell, or use this
+software or any part of it, in whole or in part, for any personal, academic or
+commercial purpose, nor create derivative works from it.
+
+Third-party libraries, data and images keep their own licences (FastAPI, Chart.js,
+Leaflet, Lucide, Open Beauty Facts data, OpenStreetMap tiles, Unsplash photos).
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.
+IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+ARISING FROM THE USE OF THE SOFTWARE. Culprit is not a medical device and does not
+provide a diagnosis.

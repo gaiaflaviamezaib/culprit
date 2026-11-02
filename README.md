@@ -72,3 +72,7 @@ tests/            unit tests for the analysis logic
 
 - Skin analysis: [YouCam API](https://yce.perfectcorp.com/ai-api) by Perfect Corp.
 - Ingredients: [Open Beauty Facts](https://world.openbeautyfacts.org), open database under the ODbL license.
+
+## License
+
+All rights reserved. The code is public so it can be viewed and evaluated; see [LICENSE](LICENSE).
